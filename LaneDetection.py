@@ -51,10 +51,10 @@ def regionOfInterest(image):
     height = image.shape[0]
 
     # Use this for test1.mp4
-    triangle = np.array([[(200, height), (800, 350), (1200, height), ]], np.int32)
+    triangle = np.array([[(200, height), (1100, height), (550, 250)]])
 
     # Use this for test2.mp4
-    #triangle = np.array([[(200, height), (1100, height), (550, 250)]])
+    # triangle = np.array([[(200, height), (800, 350), (1200, height), ]], np.int32)
 
     # Apply this triangle on a black mask with the same dimensions as image
     mask = np.zeros_like(image)
@@ -67,13 +67,13 @@ def regionOfInterest(image):
 
 def makeCoordinates(image, lineParameters):
     slope, intercept = lineParameters
-
+    multiplier = 1/2
     # y1 is the height and y2 is 3/5 the height.
-    # So our lines will both stop 3/5 the way up the image (solely for appearance).
+    # So our lines will both stop 3/5 the way up the image (for appearance).
     y1 = image.shape[0]
-    y2 = int(y1 * (3 / 5))
+    y2 = int(y1 * multiplier)
 
-    # x-values derive from y=mx+b
+    # x-values derives from y=mx+b
     x1 = int((y1 - intercept) / slope)
     x2 = int((y2 - intercept) / slope)
 
@@ -113,17 +113,16 @@ def displayLines(image, lines):
     lineImage = np.zeros_like(image)
     if lines is not None:
         for x1, y1, x2, y2 in lines:
-            cv2.line(lineImage, (x1, y1), (x2, y2), (255, 0, 0), 10)
+            cv2.line(lineImage, (x1, y1), (x2, y2), (0, 255, 0), 10)
     return lineImage
 
 
-# load image
-colorImage = cv2.imread('test_image.jpg')
-colorImageCopy = np.copy(colorImage)
+# load video
+# test1 = "test1.mp4"
+# cap = cv2.VideoCapture(test1)
 
-test1 = "test1.mp4"
 test2 = "test2.mp4"
-cap = cv2.VideoCapture(test1)
+cap = cv2.VideoCapture(test2)
 
 while cap.isOpened():
     _, frame = cap.read()
