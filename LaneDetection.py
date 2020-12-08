@@ -3,6 +3,8 @@ import cv2
 import matplotlib.pyplot as plt
 
 
+# TODO: Implement program to detect curved lanes
+
 # Function to stack videos for cleaner display output.
 def stackVideos(scale, imgArray):
     rows = len(imgArray)
@@ -47,7 +49,13 @@ def toCanny(image):
 
 def regionOfInterest(image):
     height = image.shape[0]
-    triangle = np.array([[(200, height), (1100, height), (550, 250)]])
+
+    # Use this for test1.mp4
+    triangle = np.array([[(200, height), (800, 350), (1200, height), ]], np.int32)
+
+    # Use this for test2.mp4
+    #triangle = np.array([[(200, height), (1100, height), (550, 250)]])
+
     # Apply this triangle on a black mask with the same dimensions as image
     mask = np.zeros_like(image)
     # Fill mask with white triangle
@@ -113,7 +121,9 @@ def displayLines(image, lines):
 colorImage = cv2.imread('test_image.jpg')
 colorImageCopy = np.copy(colorImage)
 
-cap = cv2.VideoCapture("test2.mp4")
+test1 = "test1.mp4"
+test2 = "test2.mp4"
+cap = cv2.VideoCapture(test1)
 
 while cap.isOpened():
     _, frame = cap.read()
@@ -133,8 +143,8 @@ while cap.isOpened():
     # Combine lineImage and colorImage
     combinedImages = cv2.addWeighted(frame, 0.8, lineImage, 1, 1)
 
-    vidStack = stackVideos(0.5, ([cannyImage, croppedImage],[lineImage, combinedImages]))
-    cv2.imshow("Videos", vidStack)
+    vidStack = stackVideos(0.5, ([cannyImage, croppedImage], [lineImage, combinedImages]))
+    cv2.imshow("Video Comparisons", vidStack)
 
     if cv2.waitKey(1) == ord('q'):
         break
